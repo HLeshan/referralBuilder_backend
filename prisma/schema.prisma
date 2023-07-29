@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+    id          String @id @default(cuid())
+    username    String @unique
+    password    String
+    firstName    String
+}
+
+model Referral {
+    id         String @id @default(cuid())
+    firstName   String
+    lastName    String
+    email       String @unique
+    mobile      String
+    addressLine1 String
+    addressLine2 String
+    suburb       String
+    state       String
+    postCode    String
+    country     String
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+
+    @@index([firstName])
+}
