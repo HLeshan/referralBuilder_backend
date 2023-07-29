@@ -1,5 +1,5 @@
 import express from "express";
-import { referralRoutes, userRoutes } from "./routes";
+import { referralRoutes, userRoutes, unprotectedReferralRoutes } from "./routes";
 import checkAuth from "./middleware/check-auth";
 
 import type { NextFunction, Request, Response } from "express";
@@ -22,6 +22,8 @@ class App {
     routes() {
         this.server.use("/api/users", userRoutes);
         this.server.use("/api/referrals", checkAuth, referralRoutes);
+        this.server.use("/api/unprotected/referrals", unprotectedReferralRoutes);
+        
 
         this.server.use((req: Request, res: Response, next: NextFunction) => {
             const error: any = new Error("Not Found");

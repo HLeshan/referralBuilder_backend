@@ -1,3 +1,4 @@
+import axios from "axios";
 import type { Request, Response, NextFunction } from "express";
 import createError from "http-errors";
 import prisma from "../services/prisma";
@@ -74,13 +75,20 @@ export const referralController = {
             .create({
                 data: referralData,
             })
-            .then((referral) =>
-                res.json({
-                    code: 1000,
-                    status: "Added Successfully",
-                    referralData: referral,
-                })
-            )
+            .then(async (referral) => {
+                const response = await axios.get(
+                    `http://localhost:3000/api/unprotected/referrals/${referral.id}`
+                );
+                if (response.data.code === 1000) {
+                    res.json({
+                        code: 1000,
+                        status: "Added Successfully",
+                        referralData: response.data.referralData,
+                    });
+                } else {
+                    return next(createError(400, "Request Failed"));
+                }
+            })
             .catch((error) => next(createError(400, "Bad Request")));
     },
 
